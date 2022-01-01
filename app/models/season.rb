@@ -20,13 +20,11 @@ class Season < ApplicationRecord
   }
 
   def self.update_season_seconds(date)
-    date = date.to_date.change(day: 1)
-    seasons = with_around_season(date).index_by { |season| season.division_date.to_date.change(day: 1) }
-    current = seasons[date]
+    current, seasons = init_around_season(date)
     return if current.blank?
 
     current.update_season_seconds(seasons[date.next_month])
-    seasons[date.prev_month]&.update_season_seconds(current)
+    seasons[date.prev_month].update_season_seconds(current) if seasons.key?(date.prev_month)
   end
 
   def update_season_seconds(after_season)
@@ -38,15 +36,29 @@ class Season < ApplicationRecord
     update!(seconds: seconds)
   end
 
-  def self.season_division_date(date)
-    month = date.month
-    year = month > 1 ? date.year : date.year - 1
-    find_by(year: year, month: month) || assume_season_division_date(year: year, month: month)
+  def month_elapsed
+    division_date.year * 12 + division_date.month
+  end
+
+  def self.assume_season(date)
+    season = _assume_season(year: date.year, month: date.month)
+    season = _assume_season(year: date.prev_month.year, month: date.prev_month.month) if date < season.division_date
+    season
+  end
+
+  def self.average_seconds_for_month(month)
+    where(month: month).average(:seconds)
   end
 
   class << self
+    private def init_around_season(date)
+      date = date.to_date.change(day: 1)
+      seasons = with_around_season(date).index_by { |season| season.division_date.to_date.change(day: 1) }
+      [seasons[date], seasons]
+    end
+
     private def assume_season_division_date(year:, month:)
-      season = Season.where(month: month).order(sanitize_sql_for_order(['ABS(year - ?)', year])).first
+      season = Season.where(month: month).order(sanitize_sql_for_order([Arel.sql('ABS(year - ?)'), year])).first
       sign = season.year <=> year
       season.division_date - sign * (season.year - year) * year_seconds_average
     end
@@ -54,6 +66,14 @@ class Season < ApplicationRecord
     private def year_seconds_average
       seconds = group(:year).having('COUNT(*) >= 12').sum(:seconds)
       seconds.values.sum / seconds.count
+    end
+
+    private def _assume_season(year:, month:)
+      year -= 1 if month <= 1
+      find_or_initialize_by(year: year, month: month) do |season|
+        season.division_date = assume_season_division_date(year: year, month: month)
+        season.seconds = average_seconds_for_month(month)
+      end
     end
   end
 

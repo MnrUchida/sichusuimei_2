@@ -20,7 +20,81 @@ class Person < ApplicationRecord
 
   enum sex: { male: 0, female: 1 }
 
-  def spent_time_in_season
+  delegate :kubou, to: :pillar_of_day
 
+  def create_pillars!(use_meikyu: false)
+    update!(datetime_of_birth: datetime_of_birth.change(hour: meikyu_time)) if use_meikyu
+
+    create_pillar_of_year!
+    create_pillar_of_month!
+    create_pillar_of_day!
+    create_pillar_of_time!
+  end
+
+  def season
+    @season ||= Season.assume_season(datetime_of_birth)
+  end
+
+  def spent_time_in_season
+    datetime_of_birth - season.division_date
+  end
+
+  def ratio_in_season
+    100.0 * spent_time_in_season / season.seconds
+  end
+
+  def days_of_current_day
+    days_of_current_year(datetime_of_birth.prev_year.year) + datetime_of_birth.strftime("%j").to_i
+  end
+
+  def nisshu
+    pillar_of_day.tenkan_data
+  end
+
+  def teikou
+    pillar_of_month.zoukan_data
+  end
+
+  def direction
+    (pillar_of_year.tenkan_data.inyou == :outward ? 1 : -1) * (male? ? 1 : -1)
+  end
+
+  def beginning_of_fortune
+    year, month = ((direction ? (season.seconds - spent_time_in_season) : spent_time_in_seasons) / 3600 / 24).divmod(3).map(&:round)
+    datetime_of_birth + year.years + month * 4.months
+  end
+
+  def fortune_of_decades
+    first = FortuneOfDecade.build_data(person: self, kanshi: pillar_of_month, date: beginning_of_fortune, direction: direction)
+    10.times.inject([first]) { |result, _| result << result.last.next }
+  end
+
+  def fortune_of_years
+    first = FortuneOfYear.build_data(person: self, kanshi: pillar_of_year, date: datetime_of_birth.change(month: 2, day: 1), direction: 1)
+    100.times.inject([first]) { |result, _| result << result.last.next }
+  end
+
+  def gogyo_value
+    [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].inject({}) do |result, pillar|
+      result.merge(pillar.gogyo_value) { |_, oldval, newval| newval + oldval }
+    end
+  end
+
+  def strength
+    [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].sum(&:strength)
+  end
+
+  def kaigou?
+
+  end
+
+  private def meikyu_time
+    shi = (season.month - datetime_of_birth.day + season.division_date.day + 6) % 12
+    shi = 6 if shi.zero?
+    shi * 2
+  end
+
+  private def days_of_current_year(year)
+    year * 365 + (year / 4).truncate - (year / 100).truncate + (year / 400).truncate
   end
 end
