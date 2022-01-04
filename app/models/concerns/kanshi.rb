@@ -12,6 +12,7 @@ module Kanshi
   def kangou?(other)     = tenkan_data.kangou?(other.tenkan_data)
   def gouka_piller()     = dup.tap { |result| result.tenkan = result.tenkan_data.gouka }
   def chu?(other)        = chishi_data.chu?(other.chishi_data)
+  def tenkan_chishi()    = "#{tenkan}_#{chishi}".to_sym
 
   def gogyo_value
     gogyo_value_kan.merge(gogyo_value_shi) { |_, oldval, newval| newval + oldval }

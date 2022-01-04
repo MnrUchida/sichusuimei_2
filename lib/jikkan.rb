@@ -1,15 +1,15 @@
 class Jikkan < ActiveHash::Base
   self.data = [
-    { key: 'kinoe', gogyo: :ki, inyou: :outward, gouka: :tsuchinoe, pos: 0 },
-    { key: 'kinoto', gogyo: :ki, inyou: :inward, gouka: :kanoto, pos: 1 },
-    { key: 'hinoe', gogyo: :hi, inyou: :outward, gouka: :mizunoe, pos: 2 },
-    { key: 'hinoto', gogyo: :hi, inyou: :inward, gouka: :kinoto, pos: 3 },
-    { key: 'tsuchinoe', gogyo: :tsuchi, inyou: :outward, gouka: :hinoe, pos: 4 },
-    { key: 'tsuchinoto', gogyo: :tsuchi, inyou: :inward, gouka: :tsuchinoto, pos: 5 },
-    { key: 'kanoe', gogyo: :kane, inyou: :outward, gouka: :kanoe, pos: 6 },
-    { key: 'kanoto', gogyo: :kane, inyou: :inward, gouka: :mizunoto, pos: 7 },
-    { key: 'mizunoe', gogyo: :mizu, inyou: :outward, gouka: :kinoe, pos: 8 },
-    { key: 'mizunoto', gogyo: :mizu, inyou: :inward, gouka: :hinoto, pos: 9 }
+    { key: :kinoe, gogyo: :ki, inyou: :outward, gouka: :tsuchinoe, pos: 0, name: '甲' },
+    { key: :kinoto, gogyo: :ki, inyou: :inward, gouka: :kanoto, pos: 1, name: '乙' },
+    { key: :hinoe, gogyo: :hi, inyou: :outward, gouka: :mizunoe, pos: 2, name: '丙' },
+    { key: :hinoto, gogyo: :hi, inyou: :inward, gouka: :kinoto, pos: 3, name: '丁' },
+    { key: :tsuchinoe, gogyo: :tsuchi, inyou: :outward, gouka: :hinoe, pos: 4, name: '戊' },
+    { key: :tsuchinoto, gogyo: :tsuchi, inyou: :inward, gouka: :tsuchinoto, pos: 5, name: '己' },
+    { key: :kanoe, gogyo: :kane, inyou: :outward, gouka: :kanoe, pos: 6, name: '庚' },
+    { key: :kanoto, gogyo: :kane, inyou: :inward, gouka: :mizunoto, pos: 7, name: '辛' },
+    { key: :mizunoe, gogyo: :mizu, inyou: :outward, gouka: :kinoe, pos: 8, name: '壬' },
+    { key: :mizunoto, gogyo: :mizu, inyou: :inward, gouka: :hinoto, pos: 9, name: '癸' }
   ]
 
   def relation(other)

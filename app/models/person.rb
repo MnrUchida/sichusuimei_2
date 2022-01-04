@@ -21,6 +21,7 @@ class Person < ApplicationRecord
   enum sex: { male: 0, female: 1 }
 
   delegate :kubou, to: :pillar_of_day
+  delegate :tentoku, to: :pillar_of_month
 
   def create_pillars!(use_meikyu: false)
     update!(datetime_of_birth: datetime_of_birth.change(hour: meikyu_time)) if use_meikyu
@@ -75,17 +76,37 @@ class Person < ApplicationRecord
   end
 
   def gogyo_value
-    [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].inject({}) do |result, pillar|
+    values = [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].inject({}) do |result, pillar|
       result.merge(pillar.gogyo_value) { |_, oldval, newval| newval + oldval }
     end
+    sorted_gogyo.to_h { |gogyo| [gogyo.name, values[gogyo.key]] }
   end
 
   def strength
     [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].sum(&:strength)
   end
 
-  def kaigou?
+  def kangou
+    result = []
+    result << '年月' if pillar_of_year.kangou?(pillar_of_month)
+    result << '月日' if pillar_of_month.kangou?(pillar_of_day)
+    result << '日時' if pillar_of_day.kangou?(pillar_of_time)
+    result
+  end
 
+  def chu
+    pillars = [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].combination(2).filter { |a, b| a.chu?(b) }
+    pillars.map { |a, b| "#{a.model_name.human}#{b.model_name.human}" }
+  end
+
+  def kaigou?
+    kanshi = pillar_of_day.tenkan_chishi
+    case pillar_of_year.nacchin
+    when :hi;   kanshi == :kanoe_tatsu || kanshi == :tsuchinoe_inu
+    when :kane; kanshi == :kanoe_inu
+    when :mizu; kanshi == :mizunoe_tatsu
+    else; false
+    end
   end
 
   private def meikyu_time
@@ -96,5 +117,11 @@ class Person < ApplicationRecord
 
   private def days_of_current_year(year)
     year * 365 + (year / 4).truncate - (year / 100).truncate + (year / 400).truncate
+  end
+
+  private def sorted_gogyo
+    gogyo_keys = Gogyo.order(:value).to_a
+    start_index = gogyo_keys.find_index { |gogyo| gogyo.key == nisshu.gogyo }
+    gogyo_keys[start_index..-1] + gogyo_keys[0...start_index]
   end
 end

@@ -1,0 +1,106 @@
+<div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col border">
+          <%= @person.strength %>
+          (<%= strength_word @person.strength %>)
+        </div>
+        <div class="col border">
+          天徳：
+          <br>
+          <%= @person.tentoku.map(&:name).join(' ') %>
+        </div>
+        <div class="col border">
+          空亡：
+          <br>
+          <%= @person.kubou.map(&:name).join(' ') %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= render partial: 'pillar_kanshi', locals: { pillar: @person.pillar_of_year, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_kanshi', locals: { pillar: @person.pillar_of_month, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_kanshi', locals: { pillar: @person.pillar_of_day, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_kanshi', locals: { pillar: @person.pillar_of_time, person: @person } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= render partial: 'pillar_hentsusei', locals: { pillar: @person.pillar_of_year, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_hentsusei', locals: { pillar: @person.pillar_of_month, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_hentsusei', locals: { pillar: @person.pillar_of_day, person: @person } %>
+        </div>
+        <div class="col">
+          <%= render partial: 'pillar_hentsusei', locals: { pillar: @person.pillar_of_time, person: @person } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <canvas class="gogyo-graph" width="400" height="400" data-gogyo=<%= @person.gogyo_value.to_json %>></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          干合:
+        </div>
+        <div class="col">
+          <ul>
+            <% @person.kangou.each do |kangou| %>
+              <li><%= kangou %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          冲:
+        </div>
+        <div class="col">
+          <ul>
+            <% @person.chu.each do |chu| %>
+              <li><%= chu %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <% if @person.kaigou? %>
+            魁ゴウ
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

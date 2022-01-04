@@ -1,0 +1,37 @@
+ja:
+  errors: &errors
+    format: ! '%{attribute}%{message}'
+    messages:
+      accepted: を受諾してください。
+      blank: を入力してください。
+      present: は入力しないでください。
+      confirmation: と%{attribute}の入力が一致しません。
+      empty: を入力してください。
+      equal_to: は%{count}にしてください。
+      even: は偶数にしてください。
+      exclusion: は予約されています。
+      greater_than: は%{count}より大きい値にしてください。
+      greater_than_or_equal_to: は%{count}以上の値にしてください。
+      inclusion: は一覧にありません。
+      invalid: は不正な値です。
+      less_than: は%{count}より小さい値にしてください。
+      less_than_or_equal_to: は%{count}以下の値にしてください。
+      not_a_number: は数値で入力してください。
+      not_an_integer: は整数で入力してください。
+      not_a_zen_kata: は全角カタカナで入力してください。
+      not_a_copyright_information_katakana: は全角カタカナ・全角スペース・長音（ー）の組み合わせで入力してください。
+      not_a_copyright_information_english: に使用できない文字が含まれています。
+      only_image_content_type: の画像形式が正しくありません。
+      over_file_size: のファイルサイズが大きすぎます。
+      odd: は奇数にしてください。
+      record_invalid: "%{errors}"
+  activerecord:
+    models:
+      pillar_of_year: 年
+      pillar_of_month: 月
+      pillar_of_day: 日
+      pillar_of_time: 時
+    attributes:
+      person:
+        sex: 性別
+        datetime_of_birth: 生年月日
