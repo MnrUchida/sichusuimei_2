@@ -31,8 +31,8 @@ class Jikkan < ActiveHash::Base
     end
   end
 
-  def next(direction)
-    Jikkan.find_by(pos: (pos + direction) % 10)
+  def +(value)
+    Jikkan.find_by(pos: (pos + value) % 10)
   end
 
   private def inyou_relation(other)

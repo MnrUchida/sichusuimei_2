@@ -37,7 +37,7 @@ class PillarOfMonth < ApplicationRecord
   private def set_tenkan() = self.tenkan ||= (person.season.month_elapsed - 8) % 10
   private def set_chishi() = self.chishi ||= person.season.month % 12
 
-  private def gogyo_value_shi
+  private def gogyo_value_shi_value
     return { chishi_data.gogyo => 3 } if chishi_data.gogyo != :tsuchi
     return { tsuchi: 1, chishi_data.gogyo_2 => 2 } if zoukan_data.gogyo != :tsuchi
 

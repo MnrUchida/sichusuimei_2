@@ -38,8 +38,8 @@ class Junishi < ActiveHash::Base
     end
   end
 
-  def next(direction)
-    Junishi.find_by(pos: (pos + direction) % 12)
+  def +(value)
+    Junishi.find_by(pos: (pos + value) % 12)
   end
 
   private def distance(other)

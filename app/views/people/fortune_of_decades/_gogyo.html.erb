@@ -1,0 +1,24 @@
+<div class="row border">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col">
+        <%= pillar.tenkan_data.name %>
+      </div>
+      <div class="col <%= kubou_class(pillar.chishi_data, person) %> <%= tentoku_class(pillar.chishi_data, person) %>">
+        <%= pillar.chishi_data.name %>
+      </div>
+      <div class="col <%= tentoku_class(pillar.zoukan_data, person) %>">
+        <%= pillar.zoukan_data.name %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <%= pillar.tenkan_hentsusei.name %>
+  </div>
+  <div class="col-md-2">
+    <%= pillar.zoukan_hentsusei.name %>
+  </div>
+  <div class="col-md-2">
+    <%= pillar.houn.name %>
+  </div>
+</div>

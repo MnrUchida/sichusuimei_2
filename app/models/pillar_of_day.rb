@@ -30,6 +30,6 @@ class PillarOfDay < ApplicationRecord
   end
 
   private def gogyo_value_kan
-    { tenkan_data.gogyo => 1 }
+    GogyoValue.new(tenkan_data.gogyo => 1)
   end
 end

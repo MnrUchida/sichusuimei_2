@@ -15,7 +15,7 @@ module Kanshi
   def tenkan_chishi()    = "#{tenkan}_#{chishi}".to_sym
 
   def gogyo_value
-    gogyo_value_kan.merge(gogyo_value_shi) { |_, oldval, newval| newval + oldval }
+    gogyo_value_kan + gogyo_value_shi
   end
 
   def set_zoukan
@@ -24,10 +24,14 @@ module Kanshi
 
   private def gogyo_value_kan
     value = tenkan_data.inyou == :outward ? 1 : 0.5
-    { tenkan_data.gogyo => value }
+    GogyoValue.new(tenkan_data.gogyo => value)
   end
 
   private def gogyo_value_shi
+    GogyoValue.new(gogyo_value_shi_value)
+  end
+
+  private def gogyo_value_shi_value
     if chishi_data.gogyo == :tsuchi
       value = chishi_data.inyou == :outward ? 1 : 0.5
       { tsuchi: value, chishi_data.gogyo_2 => 0.5 }

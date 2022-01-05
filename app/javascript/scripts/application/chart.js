@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto';
 
-const createGogyoChart = function createGogyoChart(element, gogyo) {
+function createGogyoRaderChart(element, gogyo) {
   let labels = []
   for (let [key, value] of Object.entries(gogyo)) { labels.push(`${key}(${value})`) }
   const data = {
@@ -53,8 +53,70 @@ const createGogyoChart = function createGogyoChart(element, gogyo) {
   new Chart(element, config)
 }
 
+function createGogyoLineChart(element, gogyo) {
+  const data = {
+    labels: gogyo['dates'],
+    datasets: [
+      {
+        label: '木',
+        data: gogyo['ki'],
+        borderColor: 'rgba(0, 0, 255, 1)',
+        backgroundColor: 'rgba(0, 0, 255, 0.5)',
+      },
+      {
+        label: '火',
+        data: gogyo['hi'],
+        borderColor: 'rgba(255, 0, 0, 1)',
+        backgroundColor: 'rgba(255, 0, 0, 0.5)',
+      },
+      {
+        label: '土',
+        data: gogyo['tsuchi'],
+        borderColor: 'rgba(255, 255, 0, 1)',
+        backgroundColor: 'rgba(255, 255, 0, 0.5)',
+      },
+      {
+        label: '金',
+        data: gogyo['kane'],
+        borderColor: 'rgba(200, 200, 200, 1)',
+        backgroundColor: 'rgba(200, 200, 200, 0.5)',
+      },
+      {
+        label: '水',
+        data: gogyo['mizu'],
+        borderColor: 'rgba(0, 0, 0, 1)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+    ]
+  };
+  const config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: false
+        }
+      }
+    },
+  };
+  new Chart(element, config)
+}
+
 window.addEventListener('load', (event) => {
   document.querySelectorAll(".gogyo-graph").forEach((graph) => {
-    createGogyoChart(graph, JSON.parse(graph.dataset["gogyo"]))
+    createGogyoRaderChart(graph, JSON.parse(graph.dataset["gogyo"]))
+  });
+  document.querySelectorAll(".gogyo-line").forEach((graph) => {
+    createGogyoLineChart(graph, JSON.parse(graph.dataset["gogyo"]))
   });
 });
