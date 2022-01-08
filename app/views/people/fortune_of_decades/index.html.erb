@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col col-lg-8">
-        <canvas class="gogyo-line" width="400" height="150" data-gogyo=<%= @fortune_of_decades.gogyo_hash(10).to_json %>></canvas>
+        <canvas class="gogyo-line" width="400" height="150" data-dates=<%= @fortune_of_decades.dates.to_json %> data-gogyo=<%= @fortune_of_decades.gogyo_hash.to_json %>></canvas>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
           <div class="col-md-3 col-lg-3"></div>
           <div class="col-md-9 col-lg-9">
             <div class="row border">
-              <% @fortune_of_decades.sorted_gogyo_keys.each do |gogyo| %>
+              <% @fortune_of_decades.gogyo.keys.each do |gogyo| %>
                 <div class="col"><%= gogyo.name %></div>
               <% end %>
             </div>
@@ -25,21 +25,21 @@
     </div>
     <div class="row">
       <div class="col col-lg-8">
-        <% @fortune_of_decades.take(10).each do |date, fortune| %>
+        <% @fortune_of_decades.each do |fortune_value| %>
           <div class="row">
             <div class="col-md-3 col-lg-3">
-              <%= l date %>
+              <%= l fortune_value.date %>
               <br>
-              <%= link_to "干支", "#kanshi#{date}", data: { bs_toggle: :collapse }, role: :button, aria: { expanded: :false, controls: "kanshi#{date}" }, class: 'btn btn-primary'%>
+              <%= link_to "干支", "#kanshi#{fortune_value.date}", data: { bs_toggle: :collapse }, role: :button, aria: { expanded: :false, controls: "kanshi#{fortune_value.date}" }, class: 'btn btn-primary'%>
             </div>
             <div class="col-md-9 col-lg-9">
               <div class="row border">
-                <% fortune.gogyo_hash.values.each do |gogyo_value| %>
+                <% fortune_value.gogyo_values.each do |gogyo_value| %>
                   <div class="col"><%= gogyo_value %></div>
                 <% end %>
               </div>
-              <div class="collapse" id="kanshi<%= date %>">
-                <%= render partial: 'people/pillar', locals: { pillar: fortune, person: @person } %>
+              <div class="collapse" id="kanshi<%= fortune_value.date %>">
+                <%= render partial: 'people/pillar', locals: { pillar: fortune_value.fortune, person: @person } %>
               </div>
             </div>
           </div>

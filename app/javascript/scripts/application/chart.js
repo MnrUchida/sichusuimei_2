@@ -53,9 +53,9 @@ function createGogyoRaderChart(element, gogyo) {
   new Chart(element, config)
 }
 
-function createGogyoLineChart(element, gogyo) {
+function createGogyoLineChart(element, dates, gogyo) {
   const data = {
-    labels: gogyo['dates'],
+    labels: dates,
     datasets: [
       {
         label: '木',
@@ -117,6 +117,6 @@ window.addEventListener('load', (event) => {
     createGogyoRaderChart(graph, JSON.parse(graph.dataset["gogyo"]))
   });
   document.querySelectorAll(".gogyo-line").forEach((graph) => {
-    createGogyoLineChart(graph, JSON.parse(graph.dataset["gogyo"]))
+    createGogyoLineChart(graph, JSON.parse(graph.dataset["dates"]), JSON.parse(graph.dataset["gogyo"]))
   });
 });

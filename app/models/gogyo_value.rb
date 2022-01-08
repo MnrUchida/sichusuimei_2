@@ -12,8 +12,8 @@ class GogyoValue
     GogyoValue.new(attributes.merge(value.attributes) { |_, oldval, newval| newval + oldval })
   end
 
-  def sorted_hash(start)
-    sorted_keys(start).to_h { |gogyo| [gogyo.name, attributes[gogyo.key.to_s]] }
+  def sorted_values(start)
+    sorted_keys(start).to_h { |gogyo| [gogyo, attributes[gogyo.key.to_s]] }
   end
 
   private def sorted_keys(start)

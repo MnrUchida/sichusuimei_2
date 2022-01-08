@@ -14,13 +14,14 @@ class PeopleController < ApplicationController
       @person.create_pillars!(use_meikyu: params[:use_meikyu])
       raise ActiveRecord::Rollback
     end
+    @person = PersonDecorator.decorate(@person)
     render action: :show
   rescue ActiveRecord::RecordInvalid
     render action: :new
   end
 
   def show
-    @person = Person.find(params[:id])
+    @person = PersonDecorator.decorate(Person.find(params[:id]))
   end
 
   def destroy

@@ -13,6 +13,8 @@
 #  updated_at    :datetime         not null
 #
 class Season < ApplicationRecord
+  class_attribute :seasons, default: {}
+
   before_create :set_year_month
 
   scope :with_around_season, lambda { |date|
@@ -40,6 +42,7 @@ class Season < ApplicationRecord
     division_date.year * 12 + division_date.month
   end
 
+  # 未来日がどうなるか？
   def self.assume_season(date)
     season = _assume_season(year: date.year, month: date.month)
     season = _assume_season(year: date.prev_month.year, month: date.prev_month.month) if date < season.division_date
@@ -60,7 +63,7 @@ class Season < ApplicationRecord
     private def assume_season_division_date(year:, month:)
       season = Season.where(month: month).order(sanitize_sql_for_order([Arel.sql('ABS(year - ?)'), year])).first
       sign = season.year <=> year
-      season.division_date - sign * (season.year - year) * year_seconds_average
+      season.division_date - sign * (season.year - year).abs * year_seconds_average
     end
 
     private def year_seconds_average
@@ -69,9 +72,11 @@ class Season < ApplicationRecord
     end
 
     private def _assume_season(year:, month:)
-      year -= 1 if month <= 1
-      find_or_initialize_by(year: year, month: month) do |season|
-        season.division_date = assume_season_division_date(year: year, month: month)
+      work_year = year
+      work_year -= 1 if month <= 1
+
+      seasons["#{'%04d' % work_year}#{'%02d' % month}"] ||= find_or_initialize_by(year: work_year, month: month) do |season|
+        season.division_date = assume_season_division_date(year: work_year, month: month)
         season.seconds = average_seconds_for_month(month)
       end
     end

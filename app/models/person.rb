@@ -65,20 +65,16 @@ class Person < ApplicationRecord
     datetime_of_birth + year.years + month * 4.months
   end
 
-  def fortune_of_decades
-    FortuneOfDecade.build_data(person: self, kanshi: pillar_of_month, date: beginning_of_fortune, direction: direction)
+  def fortune_of_decades(range: 100.years)
+    Fortune::Decade.build_data(person: self, kanshi: pillar_of_month, date: beginning_of_fortune, direction: direction, range: range)
   end
 
-  def fortune_of_years
-    FortuneOfYear.build_data(person: self, kanshi: pillar_of_year, date: datetime_of_birth.change(month: 2, day: 1), direction: 1)
+  def fortune_of_years(range: 100.years)
+    Fortune::Year.build_data(person: self, kanshi: pillar_of_year, date: datetime_of_birth, range: range)
   end
 
   def gogyo_value
     [pillar_of_year, pillar_of_month, pillar_of_day, pillar_of_time].sum(&:gogyo_value)
-  end
-
-  def gogyo_hash
-    gogyo_value.sorted_hash(nisshu.gogyo)
   end
 
   def strength
