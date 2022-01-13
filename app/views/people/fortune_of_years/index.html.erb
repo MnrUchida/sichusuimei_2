@@ -3,8 +3,8 @@
     <div class="card-title text-center align-middle">
       <h1>流年運</h1>
     </div>
-    <%= link_to "命式", person_path(@person) %>
-    <%= link_to "大運", person_path(@person) %>
+    <%= button_to "命式", people_path, params: person_params(@person), class: 'btn btn-primary'%>
+    <%= button_to "大運", people_fortune_of_decades_path, params: person_params(@person), class: 'btn btn-primary'%>
   </div>
   <div class="card-body">
     <div class="row">
@@ -14,13 +14,13 @@
     </div>
     <div class="row">
       <div class="col col-lg-1">
-        <%= link_to "<<", @fortune_of_years.path_to_index(-10), class: 'btn btn-primary' %>
-        <%= link_to "<", @fortune_of_years.path_to_index(-5), class: 'btn btn-primary' %>
+        <%= button_to "<", people_fortune_of_years_path, params: @fortune_of_years.path_to_index(-5), class: 'btn btn-primary' %>
+        <%= button_to "<<", people_fortune_of_years_path, params: @fortune_of_years.path_to_index(-10), class: 'btn btn-primary' %>
       </div>
       <div class="col col-lg-6"></div>
       <div class="col col-lg-1">
-        <%= link_to ">", @fortune_of_years.path_to_index(5), class: 'btn btn-primary' %>
-        <%= link_to ">>", @fortune_of_years.path_to_index(10), class: 'btn btn-primary' %>
+        <%= button_to ">", people_fortune_of_years_path, params: @fortune_of_years.path_to_index(5), class: 'btn btn-primary' %>
+        <%= button_to ">>", people_fortune_of_years_path, params: @fortune_of_years.path_to_index(10), class: 'btn btn-primary' %>
       </div>
     </div>
   </div>
@@ -48,8 +48,14 @@
             <div class="col-md-3 col-lg-3">
               <%= l fortune_value.date %>
               <br>
-              <%= link_to "干支", "#kanshi#{fortune_value.date}", data: { bs_toggle: :collapse }, role: :button, aria: { expanded: :false, controls: "kanshi#{fortune_value.date}" }, class: 'btn btn-primary'%>
-              <%= link_to "詳細", person_fortune_of_year_path(@person, id: fortune_value.date.to_s), class: 'btn btn-primary'%>
+              <div class="row">
+                <div class="col">
+                  <%= link_to "干支", "#kanshi#{fortune_value.date}", data: { bs_toggle: :collapse }, role: :button, aria: { expanded: :false, controls: "kanshi#{fortune_value.date}" }, class: 'btn btn-primary'%>
+                </div>
+                <div class="col">
+                  <%= button_to "詳細", people_fortune_of_years_path, params: person_params(@person).merge({ range_start: fortune_value.date.to_s }), method: :patch, class: 'btn btn-primary' %>
+                </div>
+              </div>
             </div>
             <div class="col-md-9 col-lg-9">
               <div class="row border">

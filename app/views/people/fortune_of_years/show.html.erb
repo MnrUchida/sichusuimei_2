@@ -3,7 +3,7 @@
     <div class="card-title text-center align-middle">
       <h1>流年運</h1>
     </div>
-    <%= link_to '命式', person_path(@person) %>
+    <%= button_to "命式", people_path, params: person_params(@person), class: 'btn btn-primary'%>
   </div>
   <div class="card-body">
     <div class="row">

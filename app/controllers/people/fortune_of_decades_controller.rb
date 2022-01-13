@@ -11,7 +11,16 @@ module People
     end
 
     private def set_person
-      @person = Person.find(params[:person_id])
+      @person = Person.new(person_params)
+      ActiveRecord::Base.transaction(joinable: false, requires_new: true) do
+        @person.save!
+        @person.create_pillars!(use_meikyu: params[:use_meikyu])
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    private def person_params
+      params.require(:person).permit(:datetime_of_birth, :sex, :name)
     end
   end
 end

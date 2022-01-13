@@ -21,7 +21,7 @@ module FortuneOfYears
     end
 
     def path_to_index(years)
-      h.person_fortune_of_years_path(range_start: dates.min + years.years)
+      h.person_params(first.person).merge({ range_start: dates.min + years.years })
     end
 
     private def initial_hash

@@ -18,4 +18,8 @@ module ApplicationHelper
   def tentoku_class(kanshi, person)
     'tentoku' if person.tentoku.include?(kanshi)
   end
+
+  def person_params(person)
+    { person: { datetime_of_birth: person.datetime_of_birth, sex: person.sex } }
+  end
 end
