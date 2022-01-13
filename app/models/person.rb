@@ -61,8 +61,8 @@ class Person < ApplicationRecord
   end
 
   def beginning_of_fortune
-    year, month = ((direction ? (season.seconds - spent_time_in_season) : spent_time_in_seasons) / 3600 / 24).divmod(3).map(&:round)
-    datetime_of_birth + year.years + month * 4.months
+    month = ((direction > 0) ? (season.seconds - spent_time_in_season) : spent_time_in_season) / season.seconds * 10 * 12
+    datetime_of_birth + month.round.months
   end
 
   def fortune_of_decades(range: 100.years)

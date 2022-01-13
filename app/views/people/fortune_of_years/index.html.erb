@@ -1,14 +1,26 @@
 <div class="card main">
   <div class="card-header align-middle">
     <div class="card-title text-center align-middle">
-      <h1>大運</h1>
+      <h1>流年運</h1>
     </div>
     <%= link_to "命式", person_path(@person) %>
+    <%= link_to "大運", person_path(@person) %>
   </div>
   <div class="card-body">
     <div class="row">
       <div class="col col-lg-8">
-        <canvas class="gogyo-line" width="400" height="150" data-dates=<%= @fortune_of_decades.dates.to_json %> data-gogyo=<%= @fortune_of_decades.gogyo_hash.to_json %>></canvas>
+        <canvas class="gogyo-line" width="400" height="150" data-dates=<%= @fortune_of_years.dates.to_json %> data-gogyo=<%= @fortune_of_years.gogyo_hash.to_json %>></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-lg-1">
+        <%= link_to "<<", @fortune_of_years.path_to_index(-10), class: 'btn btn-primary' %>
+        <%= link_to "<", @fortune_of_years.path_to_index(-5), class: 'btn btn-primary' %>
+      </div>
+      <div class="col col-lg-6"></div>
+      <div class="col col-lg-1">
+        <%= link_to ">", @fortune_of_years.path_to_index(5), class: 'btn btn-primary' %>
+        <%= link_to ">>", @fortune_of_years.path_to_index(10), class: 'btn btn-primary' %>
       </div>
     </div>
   </div>
@@ -20,8 +32,8 @@
         <div class="row">
           <div class="col-md-3 col-lg-3"></div>
           <div class="col-md-9 col-lg-9">
-            <div class="row border bg-light">
-              <% @fortune_of_decades.gogyo.keys.each do |gogyo| %>
+            <div class="row border">
+              <% @fortune_of_years.gogyo.keys.each do |gogyo| %>
                 <div class="col"><%= gogyo.name %></div>
               <% end %>
             </div>
@@ -31,13 +43,13 @@
     </div>
     <div class="row">
       <div class="col col-lg-8">
-        <% @fortune_of_decades.each do |fortune_value| %>
+        <% @fortune_of_years.each do |fortune_value| %>
           <div class="row">
             <div class="col-md-3 col-lg-3">
               <%= l fortune_value.date %>
               <br>
               <%= link_to "干支", "#kanshi#{fortune_value.date}", data: { bs_toggle: :collapse }, role: :button, aria: { expanded: :false, controls: "kanshi#{fortune_value.date}" }, class: 'btn btn-primary'%>
-              <%= link_to "流年運", person_fortune_of_years_path(@person, range_start: fortune_value.date.to_s), class: 'btn btn-primary'%>
+              <%= link_to "詳細", person_fortune_of_year_path(@person, id: fortune_value.date.to_s), class: 'btn btn-primary'%>
             </div>
             <div class="col-md-9 col-lg-9">
               <div class="row border">

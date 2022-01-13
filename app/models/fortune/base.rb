@@ -32,10 +32,10 @@ module Fortune
 
       def +(value)
         self.class.new(person: person, tenkan: (tenkan_data + value).key, chishi: (chishi_data + value).key,
-                       range: calc_date(value - 1)...calc_date(value)).tap(&:set_zoukan)
+                       range: calc_range(value.abs)).tap(&:set_zoukan)
       end
 
-      private def calc_date(value); end
+      private def calc_range(_); end
     end
 
     # クラスメソッド
@@ -50,7 +50,7 @@ module Fortune
     end
 
     def gogyo_values
-      Gogyo.new.add(map { |range, point| { range: range, value: point.gogyo_value } })
+      Gogyo.build(to_h { |range, point| [range, point.gogyo_value] })
     end
 
     def each

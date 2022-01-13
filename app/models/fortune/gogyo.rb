@@ -4,46 +4,70 @@ module Fortune
   class Gogyo
     include Enumerable
 
+    attr_accessor :points, :results
+
+    class Result
+      include ActiveModel::Model
+      include ActiveModel::Attributes
+
+      attribute :range
+      attribute :value
+
+      def include?(date)
+        range.include?(date)
+      end
+
+      def change(range)
+        dup.tap { |result| result.range = range }
+      end
+
+      def +(other)
+        self.value += other.value
+        self
+      end
+    end
+
     def initialize
       super
       @points = []
       @results = []
     end
 
-    class Point
-      include ActiveModel::Model
-      include ActiveModel::Attributes
-
-      attribute :range
-      attribute :value
-    end
-
-    def add(params)
-      params.is_a?(Array) ? params.each { |param| _add(param) } : _add(params)
-      @results = _build_result
-      self
+    def self.build(params)
+      new.tap do |result|
+        result.points = params.keys.map(&:min).flatten.uniq.sort
+        result.points << (params.keys.map(&:max).max + 1.day)
+        result.results = params.map { |range, value| Result.new(range: range, value: value) }
+      end
     end
 
     def +(other)
-      add(other.map { |range, value| { range: range, value: value } })
+      @points = (@points + other.points).flatten.uniq.sort
+      this_results = separate(@points)
+      other_results = other.separate(@points)
+
+      @results = this_results.merge(other_results) { |_, old_val, new_val| old_val + new_val }.values
+      self
     end
 
-    # 人を指定して
-    # 日時を指定して
-    # 読み取れる形に（五行値が整形処理を持っているので、それでいける）
-    # 結果に対して配列形式でのアクセス
-    private def _add(param)
-      @points << Point.new(param)
+    def separate(new_points)
+      points = new_points.dup
+      @results.inject({}) do |new_results, result|
+        points = points[points.find_index { |point| result.include?(point) }..]
+        next new_results if points.nil?
+
+        make_results(points, result, new_results)
+      end
     end
 
-    private def _ranges
-      keys = @points.flat_map {|point| point.range.min }.uniq.sort
-      (0...(keys.length - 1)).map { |index| keys[index]...keys[index + 1] }
-    end
+    def make_results(points, value, result)
+      points_in_range = points.take_while { |point| value.include?(point) }
+      points -= points_in_range
 
-    private def _build_result
-      _ranges.to_h do |range|
-        [range, @points.filter { |point| point.range.include?(range.first) }.sum(&:value)]
+      index = 0
+      points_in_range.each_with_object(result) do |point, results|
+        index += 1
+        results[point] = Result.new(range: point...(points_in_range[index] || points[0]), value: value.value)
       end
     end
 
@@ -52,7 +76,7 @@ module Fortune
     end
 
     def filter_cover(range)
-      filter { |date_range, _| date_range.max >= range.min && date_range.min <= range.max }
+      filter { |result| result.range.max >= range.min && result.range.min <= range.max }
     end
   end
 end

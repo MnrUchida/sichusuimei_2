@@ -10,10 +10,6 @@ module People
       @fortune_of_decades = CollectionDecorator.decorate(FortuneValue.build(person: @person, range: range))
     end
 
-    #　デコレータを導入する
-    def show
-    end
-
     private def set_person
       @person = Person.find(params[:person_id])
     end

@@ -1,0 +1,63 @@
+<div class="card main">
+  <div class="card-header">
+    <div class="card-title text-center align-middle">
+      <h1>流年運</h1>
+    </div>
+    <%= link_to '命式', person_path(@person) %>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <%= l @person.datetime_of_birth %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-lg-6">
+        <div class="card">
+          <div class="card-title text-center align-middle">
+            命式
+          </div>
+          <div class="card-body">
+            <%= render partial: 'people/pillar', locals: { pillar: @person.pillar_of_year, person: @person } %>
+            <%= render partial: 'people/pillar', locals: { pillar: @person.pillar_of_month, person: @person } %>
+            <%= render partial: 'people/pillar', locals: { pillar: @person.pillar_of_day, person: @person } %>
+            <%= render partial: 'people/pillar', locals: { pillar: @person.pillar_of_time, person: @person } %>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title text-center align-middle">
+            大運
+          </div>
+          <div class="card-body">
+            <%= render partial: 'people/pillar', locals: { pillar: @fortune_of_decade.fortune, person: @person } %>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title text-center align-middle">
+            流年
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <%= l @fortune_of_year.date %>
+              </div>
+            </div>
+            <%= render partial: 'people/pillar', locals: { pillar: @fortune_of_year.fortune, person: @person } %>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <canvas class="gogyo-graph" width="400" height="400" data-gogyo=<%= @fortune_of_year.gogyo_hash.to_json %>></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

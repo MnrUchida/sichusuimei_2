@@ -5,6 +5,7 @@ module Fortune
     include Base
 
     class Point < Base::Point
+      private def calc_range(value) = calc_date(value)...calc_date(value + 1)
       private def calc_date(value)
         season = Season.assume_season(range.first)
         Season.assume_season(Date.new(season.year + value, 2, 15)).division_date.to_date

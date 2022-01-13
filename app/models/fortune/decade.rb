@@ -13,9 +13,8 @@ module Fortune
         { tsuchi: value, chishi_data.gogyo_2 => 1 }
       end
 
-      private def calc_date(value)
-        range.last.to_date + (value * 10).years
-      end
+      private def calc_range(value) = calc_date(value - 1)...calc_date(value)
+      private def calc_date(value)  = range.last.to_date + (value * 10).years
     end
     self.point = Point
   end
