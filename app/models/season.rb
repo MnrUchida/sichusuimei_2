@@ -26,7 +26,7 @@ class Season < ApplicationRecord
     return if current.blank?
 
     current.update_season_seconds(seasons[date.next_month])
-    seasons[date.prev_month].update_season_seconds(current) if seasons.key?(date.prev_month)
+    seasons[date.prev_month.change(day: 1)].update_season_seconds(current) if seasons.key?(date.prev_month.change(day: 1))
   end
 
   def update_season_seconds(after_season)

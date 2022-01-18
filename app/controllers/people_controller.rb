@@ -12,7 +12,6 @@ class PeopleController < ApplicationController
     ActiveRecord::Base.transaction(joinable: false, requires_new: true) do
       @person.save!
       @person.create_pillars!(use_meikyu: params[:use_meikyu])
-      raise ActiveRecord::Rollback
     end
     @person = PersonDecorator.decorate(@person)
     render action: :show

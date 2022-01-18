@@ -236,5 +236,6 @@ dates = [
   { division_date: "2004/11/7 10:59" },
   { division_date: "2004/12/7 3:49" }
 ]
+Season.delete_all
 dates.each { |date| Season.create!(date) }
-dates.each { |date| Season.update_season_seconds(date) }
+dates.each { |date| Season.update_season_seconds(date[:division_date]) }
